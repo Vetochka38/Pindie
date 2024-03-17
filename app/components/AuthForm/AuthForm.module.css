@@ -63,7 +63,7 @@
   pointer-events: none;
 }
 
-.form__reset:hover + .form__submit {
+.form__reset:hover+.form__submit {
   color: #000;
   background-color: transparent;
 }
@@ -87,4 +87,8 @@
 .form__submit:disabled {
   opacity: .5;
   pointer-events: none;
+}
+
+.form__message {
+  padding-bottom: 5%;
 }

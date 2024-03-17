@@ -9,6 +9,7 @@ import { usePathname } from 'next/navigation'
 
 export const Header = () => {
   const [popupIsOpened, setPopupIsOpened] = useState(false)
+  const [isAuthorized, setIsAuthorized] =useState(false)
   const openPopup = () => {
     setPopupIsOpened(true)
   }
@@ -68,7 +69,7 @@ export const Header = () => {
       </nav>
       <Overlay popupIsOpened={popupIsOpened} closePopup={closePopup} />
       <Popup popupIsOpened={popupIsOpened} closePopup={closePopup}>
-        <AuthForm />
+        <AuthForm close={closePopup} setAuth={setIsAuthorized}/>
       </Popup>
     </header>
   )

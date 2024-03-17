@@ -1,10 +1,27 @@
 "use client"
+import { getNormalizedGameDataById, isResponseOk } from "@/app/api/api-utils";
 import Styles from "./Game.module.css";
-import { getGameById } from "@/app/data/data-utils";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Preloader } from "@/app/components/Preloader/Preloader";
+import { endpoints } from "@/app/api/config";
 
 export default function GamePage(props) {
-  const game = getGameById(props.params.id)
+  const [game,setGame] = useState(null)
+  const [preloaderVisible, setPreloaderVisible] = useState(true);
+  
+  useEffect(() => {
+    async function fetchData() {
+      const game = await getNormalizedGameDataById(
+        endpoints.games,
+        props.params.id
+      )
+      isResponseOk(game) ? setGame(game) : setGame(null);
+      setPreloaderVisible(false)
+    }
+    fetchData();
+  }, [])
+  
   const router = useRouter()
   return (
     <main className="main">
@@ -40,10 +57,12 @@ export default function GamePage(props) {
             </div>
           </section>
         </>
+      ) : preloaderVisible ? (
+        <Preloader />
       ) : (
         <>
           <section className={Styles["game"]}>
-            <img className={Styles["game__iframe"]} src="/images/no-game.jpg" alt="Такой игры не сущеcтвует"/>
+            <img className={Styles["game__iframe"]} src="/images/no-game.jpg" alt="Такой игры не сущеcтвует" />
           </section>
         </>
       )
