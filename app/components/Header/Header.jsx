@@ -63,7 +63,7 @@ export const Header = () => {
         </ul>
         <div className={Styles.auth}>
           <button className={Styles["auth__button"]} onClick={openPopup}>
-            Войти
+            {!isAuthorized ? "Войти" : "Выйти"}
           </button>
         </div>
       </nav>

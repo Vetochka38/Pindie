@@ -66,8 +66,20 @@ export const authorize = async (url, data) => {
     }
 }
 
-// Чтобы отправить данные на сервер, надо использовать POST-запрос.
-// Нужно указать, что тип контента, который мы отправляем, — ""
-// В теле запроса будут данные, которые функция JSON.stringify() приведёт к строке.
-// Если код ответа сервера не будет равен 200 (это означает, что с запросом что-то не так), то нужно выдать ошибку. Это можно сделать так: throw new Error("Ошибка авторизации"). В таком случае функция перейдёт в блок catch, откуда мы вернём ошибку авторизации.
-// Адрес для отправки запроса: ${BASE_URL}, где ${BASE_URL} — основной адрес для запросов к Pindie API.
+//  * URL-адрес в виде строки, куда будет выполнен запрос
+//  * JWT–токен в виде строки
+export const getMe = async (url, jwt) => {
+    try {
+        const response = await fetch(url, {
+            method: "GET",
+            headers: { Authorization: `Bearer ${jwt}` },
+        });
+        if (response.status !== 200) {
+            throw new Error("Ошибка получения данных");
+        }
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        return error;
+    }
+};

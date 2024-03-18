@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react';
 import Styles from './AuthForm.module.css';
-import { authorize, isResponseOk } from '@/app/api/api-utils';
+import { authorize, getMe, isResponseOk } from '@/app/api/api-utils';
 import { endpoints } from '@/app/api/config';
 
 export const AuthForm = (props) => {
@@ -17,6 +17,7 @@ export const AuthForm = (props) => {
     e.preventDefault();
     const userData = await authorize(endpoints.auth, authData);
     if (isResponseOk(userData)) {
+      await getMe(endpoints.me, userData.jwt)
       setUserData(userData);
       props.setAuth(true);
       setMessage({ status: "success", text: "Вы авторизовались!" });
@@ -68,3 +69,4 @@ export const AuthForm = (props) => {
     </form>
   )
 };
+// {identifier: 'aski@example.com', password: 'ilovehtml'}
