@@ -83,3 +83,37 @@ export const getMe = async (url, jwt) => {
         return error;
     }
 };
+
+export const setJWT = (jwt) => {
+    localStorage.setItem("jwt", jwt);
+};
+
+export const getJWT = () => {
+    return localStorage.getItem("jwt");
+};
+
+export const removeJWT = () => {
+    localStorage.removeItem("jwt");
+};
+export const checkIfUserVoted = (game, userId) => {
+    return game.users.find((user) => user.id === userId);
+};
+export const vote = async (url, jwt, usersArray) => {
+    try {
+        const response = await fetch(url, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${jwt}`,
+            },
+            body: JSON.stringify({ users_permissions_users: usersArray }),
+        });
+        if (response.status !== 200) {
+            throw new Error("Ошибка голосования");
+        }
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        return error;
+    }
+}
