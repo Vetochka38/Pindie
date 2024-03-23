@@ -1,3 +1,4 @@
+'use client'
 import { getGamesByCategory } from './data/data-utils';
 
 import { Banner } from './components/Banner/Banner'
@@ -8,17 +9,31 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import { getNormalizedGamesDataByCategory } from './api/api-utils';
 import { endpoints } from './api/config';
+import { useGetDataByCategory } from './api/api-hooks';
+import { Preloader } from './components/Preloader/Preloader';
 
-export default async function Home() {
-  // const dataFromUrl = await getData('https://api-code-2.practicum-team.ru/games')
-  // console.log(dataFromUrl)
-  const popularGames =await getNormalizedGamesDataByCategory(endpoints.games, "popular")
-  const newGames = await getNormalizedGamesDataByCategory(endpoints.games, "new")
+export default function Home() {
+  const popularGames = useGetDataByCategory(
+    endpoints.games,
+    "popular"
+  )
+  const newGames = useGetDataByCategory(
+    endpoints.games,
+    "new"
+  )
   return (
     <main className="main">
       <Banner />
-      <CardsList id="popular" title="Популярное" data={popularGames} />
-      <CardsList id="new" title="Новинки" data={newGames} />
+      {popularGames ? (
+        <CardsList id="popular" title="Популярное" data={popularGames} />
+      ) : (
+        <Preloader />
+      )}
+      {newGames ? (
+        <CardsList id="new" title="Новинки" data={newGames} />
+      ) : (
+        <Preloader />
+      )}
       <Promo />
     </main>
   );

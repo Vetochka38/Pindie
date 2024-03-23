@@ -1,17 +1,17 @@
 "use client"
 import Styles from './Header.module.css'
 import { Overlay } from '../Overlay/Overlay'
-import { useEffect, useState } from 'react'
+import {useState} from 'react'
 import { Popup } from '../Popup/Popup'
 import { AuthForm } from '../AuthForm/AuthForm'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { getJWT, getMe, isResponseOk, removeJWT } from '@/app/api/api-utils'
-import { endpoints } from '@/app/api/config'
+import { useStore } from '@/app/store/app-store'
 
 export const Header = () => {
   const [popupIsOpened, setPopupIsOpened] = useState(false)
-  const [isAuthorized, setIsAuthorized] = useState(false)
+  const authContext = useStore()
+
   const openPopup = () => {
     setPopupIsOpened(true)
   }
@@ -19,25 +19,10 @@ export const Header = () => {
     setPopupIsOpened(false)
   }
   const pathname = usePathname()
-  useEffect(() => {
-    const jwt = getJWT()
-    if (jwt) {
-      getMe(endpoints.me, jwt).then((userData) => {
-        if (isResponseOk(userData)) {
-          setIsAuthorized(true)
-        } else {
-          setIsAuthorized(false)
-          removeJWT()
-        }
-      })
-    }
-  }, [])
 
-  const handleLogout = () => {
-    setIsAuthorized(false)
-    removeJWT()
+  const handleLogout = () =>{
+    authContext.logout()
   }
-
   return (
     <header className={Styles.header}>
       {pathname === "/" ?
@@ -82,7 +67,7 @@ export const Header = () => {
           </li>
         </ul>
         <div className={Styles.auth}>
-          {isAuthorized ? (
+          {authContext.isAuth ? (
             <button className={Styles["auth__button"]} onClick={handleLogout}>
               Выйти
             </button>
@@ -96,7 +81,7 @@ export const Header = () => {
       </nav>
       <Overlay popupIsOpened={popupIsOpened} closePopup={closePopup} />
       <Popup popupIsOpened={popupIsOpened} closePopup={closePopup}>
-        <AuthForm close={closePopup} setAuth={setIsAuthorized} />
+        <AuthForm close={closePopup} />
       </Popup>
     </header>
   )
