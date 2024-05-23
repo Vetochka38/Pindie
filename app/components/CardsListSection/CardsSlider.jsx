@@ -48,10 +48,10 @@ export const CardsSlider = (props) => {
   return (
     <div className={`swiper ${Styles["slider"]}`}>
       <ul className={`swiper-wrapper ${Styles["slider-wrapper"]}`}>
-        {props.data.map((item, i) => {
+        {props.data.map((item, _id) => {
           return (
-            <li className={`swiper-slide ${Styles["slide"]}`} key={i}>
-              <Link href={`/games/${item.id}`}>
+            <li className={`swiper-slide ${Styles["slide"]}`} key={_id}>
+              <Link href={`/games/${item._id}`}>
                 <Card {...item} />
               </Link>
             </li>

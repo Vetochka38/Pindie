@@ -43,7 +43,7 @@ export const getNormalizedGamesDataByCategory = async (url, category) => {
     }
     return isResponseOk(data) ? normalizeData(data) : data
   } catch (error) {
-    return error
+    return
   }
 }
 
